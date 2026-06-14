@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import FormIngresoOP from './FormIngresoOP'
 
 export default async function IngresoPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const [{ data: roleData }, { data: responsables }, { data: vendedores }] = await Promise.all([
     supabase.from('user_roles').select('role').single(),

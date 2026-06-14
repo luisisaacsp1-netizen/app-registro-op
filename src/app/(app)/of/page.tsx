@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import TablaOF from './TablaOF'
 
 export default async function OFPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: rows } = await supabase
     .from('ordenes_fabricacion')

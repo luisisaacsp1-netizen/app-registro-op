@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import TablaPrograma from './TablaPrograma'
 
 export default async function ProgramaPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const [{ data: rows }, { data: roleData }, { data: responsables }] = await Promise.all([
     supabase

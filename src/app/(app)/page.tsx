@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { ClipboardList, Truck, Wrench, AlertCircle } from 'lucide-react'
 
 export default async function DashboardPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const hoy = format(new Date(), 'yyyy-MM-dd')
 
   const [{ data: pendientes }, { data: enProceso }, { data: despachosHoy }, { data: pendientesOf }] =
