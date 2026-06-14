@@ -1,0 +1,139 @@
+'use server'
+
+import { createClient } from '@/lib/supabase/server'
+import { revalidatePath } from 'next/cache'
+
+export async function aprobarOP(opId: string, checklist: Record<string, boolean>) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'No autenticado' }
+
+  // Obtener la OP con sus series
+  const { data: op, error: errOp } = await supabase
+    .from('ordenes_produccion')
+    .select('*, op_series(*)')
+    .eq('id', opId)
+    .single()
+
+  if (errOp || !op) return { error: 'OP no encontrada' }
+
+  // Actualizar estado OP
+  const { error: errUpd } = await supabase
+    .from('ordenes_produccion')
+    .update({
+      estado: 'APROBADA',
+      checklist,
+      fecha_revision: new Date().toISOString(),
+      revisado_por: user.id,
+    })
+    .eq('id', opId)
+
+  if (errUpd) return { error: errUpd.message }
+
+  // Generar filas en programa_produccion (una por serie)
+  const series: any[] = op.op_series ?? []
+  const filas = series.length > 0
+    ? series.map((s: any, i: number) => ({
+        op_id: opId,
+        op_pv: String(op.numero_op),
+        nv: op.numero_nv ? String(op.numero_nv) : null,
+        tipo: op.tipo_op,
+        cliente: op.cliente_nombre,
+        vendedor: op.vendedor,
+        modelo: s.modelo ?? op.modelo,
+        serie: s.serie,
+        descripcion: s.descripcion_trabajo,
+        fecha_despacho: op.fecha_entrega,
+        estado: 'PENDIENTE',
+        genera_of: false,
+      }))
+    : [{
+        op_id: opId,
+        op_pv: String(op.numero_op),
+        nv: op.numero_nv ? String(op.numero_nv) : null,
+        tipo: op.tipo_op,
+        cliente: op.cliente_nombre,
+        vendedor: op.vendedor,
+        modelo: op.modelo,
+        descripcion: null,
+        fecha_despacho: op.fecha_entrega,
+        estado: 'PENDIENTE',
+        genera_of: false,
+      }]
+
+  const { error: errProg } = await supabase.from('programa_produccion').insert(filas)
+  if (errProg) return { error: 'OP aprobada pero error al crear programa: ' + errProg.message }
+
+  revalidatePath('/ops')
+  revalidatePath('/programa')
+  return { ok: true }
+}
+
+export async function rechazarOP(opId: string, observaciones: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'No autenticado' }
+
+  const { error } = await supabase
+    .from('ordenes_produccion')
+    .update({
+      estado: 'RECHAZADA',
+      observaciones_ot: observaciones,
+      fecha_revision: new Date().toISOString(),
+      revisado_por: user.id,
+    })
+    .eq('id', opId)
+
+  if (error) return { error: error.message }
+
+  revalidatePath('/ops')
+  return { ok: true }
+}
+
+export async function crearOP(data: {
+  numero_op: number
+  numero_nv?: number | null
+  tipo_op: string
+  cliente_nombre: string
+  vendedor?: string | null
+  modelo?: string | null
+  distribucion?: string | null
+  fecha_inicio?: string | null
+  fecha_entrega?: string | null
+  contacto_nombre?: string | null
+  contacto_telefono?: string | null
+  direccion_entrega?: string | null
+  series: { serie: string; modelo: string; descripcion_trabajo: string }[]
+  adicionales: { serie_ref?: string; descripcion_corta: string; cantidad: number }[]
+}) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'No autenticado' }
+
+  const { series, adicionales, ...opData } = data
+
+  const { data: op, error: errOp } = await supabase
+    .from('ordenes_produccion')
+    .insert({ ...opData, created_by: user.id })
+    .select()
+    .single()
+
+  if (errOp || !op) return { error: errOp?.message ?? 'Error creando OP' }
+
+  if (series.length > 0) {
+    const { error: errS } = await supabase.from('op_series').insert(
+      series.map((s, i) => ({ ...s, op_id: op.id, orden_fila: i + 1 }))
+    )
+    if (errS) return { error: 'OP creada pero error en series: ' + errS.message }
+  }
+
+  if (adicionales.length > 0) {
+    const { error: errA } = await supabase.from('op_adicionales').insert(
+      adicionales.map((a, i) => ({ ...a, op_id: op.id, numero_item: i + 1 }))
+    )
+    if (errA) return { error: 'OP creada pero error en adicionales: ' + errA.message }
+  }
+
+  revalidatePath('/ops')
+  return { ok: true, id: op.id }
+}

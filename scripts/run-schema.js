@@ -11,20 +11,23 @@ fs.readFileSync(envPath, 'utf8').split('\n').forEach(line => {
 
 const sql = fs.readFileSync(path.join(__dirname, '..', 'supabase_schema.sql'), 'utf8')
 
+// Try direct host first, fallback to pooler
+const directHost = `db.${process.env.DB_USER?.split('.')[1] ?? 'npmirpgebvdxuxtlybkz'}.supabase.co`
+
 const client = new Client({
-  host: process.env.DB_HOST,
-  port: parseInt(process.env.DB_PORT || '5432'),
+  host: directHost,
+  port: 5432,
   database: 'postgres',
-  user: process.env.DB_USER || 'postgres',
+  user: 'postgres',
   password: process.env.DB_PASS,
-  ssl: { rejectUnauthorized: false }
+  ssl: { rejectUnauthorized: false },
+  connectionTimeoutMillis: 15000
 })
 
 async function run() {
   await client.connect()
-  console.log('Conectado a Supabase PostgreSQL')
+  console.log('Conectado a Supabase PostgreSQL (direct)')
 
-  // Split by semicolons and run statement by statement to handle errors better
   const statements = sql
     .split(/;\s*\n/)
     .map(s => s.trim())
@@ -40,7 +43,7 @@ async function run() {
       if (e.message.includes('already exists')) {
         skip++
       } else {
-        console.warn('WARN:', e.message.substring(0, 100))
+        console.warn('WARN:', e.message.substring(0, 120))
       }
     }
   }

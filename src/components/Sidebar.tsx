@@ -11,6 +11,7 @@ import {
   Wrench,
   LogOut,
   ChevronRight,
+  FileCheck2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -21,7 +22,8 @@ interface SidebarProps {
 
 const navItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard, roles: ['ot', 'terreno', 'admin'] },
-  { href: '/ingreso', label: 'Ingreso OP', icon: ClipboardList, roles: ['ot', 'admin'] },
+  { href: '/ops', label: 'Órdenes de Producción', icon: FileCheck2, roles: ['ot', 'terreno', 'admin'] },
+  { href: '/ops/nueva', label: 'Ingresar OP', icon: ClipboardList, roles: ['ot', 'admin'] },
   { href: '/programa', label: 'Programa', icon: Table2, roles: ['ot', 'terreno', 'admin'] },
   { href: '/of', label: 'Órdenes de Fabricación', icon: Wrench, roles: ['ot', 'admin'] },
 ]
