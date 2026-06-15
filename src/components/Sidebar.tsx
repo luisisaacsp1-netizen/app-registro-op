@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
@@ -10,16 +11,15 @@ import {
   Table2,
   Wrench,
   LogOut,
-  ChevronRight,
   FileCheck2,
   UserCircle,
   ShieldCheck,
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 
 interface SidebarProps {
   role: string
   userEmail: string
+  nombreCompleto?: string
 }
 
 const navItems = [
@@ -33,7 +33,15 @@ const navItems = [
   { href: '/perfil', label: 'Mi perfil', icon: UserCircle, roles: ['ot', 'terreno', 'admin', 'ventas'] },
 ]
 
-export default function Sidebar({ role, userEmail }: SidebarProps) {
+function getInitials(email: string, nombre?: string) {
+  if (nombre) {
+    const parts = nombre.trim().split(' ')
+    return (parts[0][0] + (parts[1]?.[0] ?? '')).toUpperCase()
+  }
+  return email.slice(0, 2).toUpperCase()
+}
+
+export default function Sidebar({ role, userEmail, nombreCompleto }: SidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
   const supabase = createClient()
@@ -44,44 +52,140 @@ export default function Sidebar({ role, userEmail }: SidebarProps) {
   }
 
   const visibleItems = navItems.filter(item => item.roles.includes(role))
+  const initials = getInitials(userEmail, nombreCompleto)
 
   return (
-    <aside className="w-56 bg-white border-r border-gray-200 flex flex-col">
-      <div className="px-4 py-5 border-b border-gray-200">
-        <div className="text-lg font-bold text-blue-800 leading-tight">Patagonia</div>
-        <div className="text-xs text-gray-500 mt-0.5">Gestión de Producción</div>
+    <aside
+      className="flex flex-col items-center flex-shrink-0 border-r"
+      style={{
+        width: 52,
+        minWidth: 52,
+        background: '#1a2744',
+        borderColor: '#2a3552',
+      }}
+    >
+      {/* Logo */}
+      <div className="flex items-center justify-center mt-2 mb-2" style={{ width: 36, height: 36 }}>
+        <Image src="/logo.svg" alt="Patagonia" width={32} height={32} className="rounded" style={{ objectFit: 'contain', background: '#0d1b2e', borderRadius: 6 }} />
       </div>
 
-      <nav className="flex-1 px-2 py-3 space-y-0.5">
+      {/* Divider */}
+      <div style={{ width: 28, height: 1, background: '#2a3552', margin: '4px 0 6px' }} />
+
+      {/* Nav items */}
+      <nav className="flex flex-col items-center gap-1 flex-1 w-full px-1.5">
         {visibleItems.map(item => {
           const Icon = item.icon
           const active = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
           return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                'flex items-center gap-2.5 px-3 py-2 rounded-md text-sm font-medium transition-colors',
-                active
-                  ? 'bg-blue-50 text-blue-800'
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-              )}
-            >
-              <Icon size={16} />
-              <span className="flex-1">{item.label}</span>
-              {active && <ChevronRight size={14} className="text-blue-400" />}
-            </Link>
+            <div key={item.href} className="relative group w-full">
+              <Link
+                href={item.href}
+                className={cn(
+                  'relative flex items-center justify-center rounded-lg transition-colors',
+                  'w-full h-10'
+                )}
+                style={{
+                  background: active ? 'rgba(26,106,191,0.25)' : 'transparent',
+                  color: active ? '#60a5fa' : '#64748b',
+                }}
+                onMouseEnter={e => {
+                  if (!active) (e.currentTarget as HTMLElement).style.background = '#243056'
+                  if (!active) (e.currentTarget as HTMLElement).style.color = '#e2e8f0'
+                }}
+                onMouseLeave={e => {
+                  if (!active) (e.currentTarget as HTMLElement).style.background = 'transparent'
+                  if (!active) (e.currentTarget as HTMLElement).style.color = '#64748b'
+                }}
+              >
+                {/* Active indicator */}
+                {active && (
+                  <span
+                    className="absolute left-0 rounded-r"
+                    style={{ top: 8, bottom: 8, width: 3, background: '#60a5fa' }}
+                  />
+                )}
+                <Icon size={18} />
+              </Link>
+
+              {/* Tooltip */}
+              <div
+                className="absolute left-full top-1/2 -translate-y-1/2 ml-2 z-50
+                  pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"
+                style={{
+                  background: '#1e293b',
+                  color: '#fff',
+                  fontSize: 11,
+                  fontWeight: 600,
+                  padding: '5px 10px',
+                  borderRadius: 6,
+                  whiteSpace: 'nowrap',
+                  boxShadow: '0 4px 12px rgba(0,0,0,.4)',
+                  border: '1px solid #2a3552',
+                }}
+              >
+                {item.label}
+              </div>
+            </div>
           )
         })}
       </nav>
 
-      <div className="px-4 py-3 border-t border-gray-200">
-        <div className="text-xs text-gray-500 truncate mb-1">{userEmail}</div>
-        <div className="text-xs font-medium text-blue-700 uppercase mb-2">{role}</div>
-        <Button variant="ghost" size="sm" className="w-full justify-start gap-2 text-gray-600 h-8 px-2" onClick={handleLogout}>
-          <LogOut size={14} />
-          Cerrar sesión
-        </Button>
+      {/* Divider */}
+      <div style={{ width: 28, height: 1, background: '#2a3552', margin: '6px 0 4px' }} />
+
+      {/* Avatar + logout */}
+      <div className="flex flex-col items-center gap-2 pb-3">
+        <div className="relative group">
+          <Link href="/perfil"
+            className="flex items-center justify-center rounded-full text-white font-bold text-xs cursor-pointer transition-all"
+            style={{
+              width: 30, height: 30,
+              background: '#1558a0',
+              border: '2px solid transparent',
+              fontSize: 11,
+            }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#60a5fa' }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'transparent' }}
+          >
+            {initials}
+          </Link>
+          {/* Tooltip avatar */}
+          <div
+            className="absolute left-full top-1/2 -translate-y-1/2 ml-2 z-50
+              pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"
+            style={{
+              background: '#1e293b', color: '#fff', fontSize: 11, fontWeight: 600,
+              padding: '5px 10px', borderRadius: 6, whiteSpace: 'nowrap',
+              boxShadow: '0 4px 12px rgba(0,0,0,.4)', border: '1px solid #2a3552',
+            }}
+          >
+            {nombreCompleto ?? userEmail}
+          </div>
+        </div>
+
+        <div className="relative group">
+          <button
+            onClick={handleLogout}
+            className="flex items-center justify-center rounded-lg transition-colors"
+            style={{ width: 36, height: 36, color: '#64748b', background: 'transparent' }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#243056'; (e.currentTarget as HTMLElement).style.color = '#ef4444' }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = '#64748b' }}
+          >
+            <LogOut size={16} />
+          </button>
+          <div
+            className="absolute left-full top-1/2 -translate-y-1/2 ml-2 z-50
+              pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"
+            style={{
+              background: '#1e293b', color: '#fff', fontSize: 11, fontWeight: 600,
+              padding: '5px 10px', borderRadius: 6, whiteSpace: 'nowrap',
+              boxShadow: '0 4px 12px rgba(0,0,0,.4)', border: '1px solid #2a3552',
+            }}
+          >
+            Cerrar sesión
+          </div>
+        </div>
       </div>
     </aside>
   )

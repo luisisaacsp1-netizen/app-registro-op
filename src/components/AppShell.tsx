@@ -15,11 +15,12 @@ export default async function AppShell({ children }: { children: React.ReactNode
     .single()
 
   const role = roleData?.role ?? 'terreno'
+  const nombreCompleto = user.user_metadata?.nombre_completo as string | undefined
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      <Sidebar role={role} userEmail={user.email ?? ''} />
-      <main className="flex-1 overflow-auto">
+    <div className="flex h-screen overflow-hidden" style={{ background: '#0f1623' }}>
+      <Sidebar role={role} userEmail={user.email ?? ''} nombreCompleto={nombreCompleto} />
+      <main className="flex-1 overflow-auto" style={{ background: '#0f1623' }}>
         {children}
       </main>
     </div>
