@@ -15,6 +15,12 @@ import { Plus, Trash2, ChevronRight, ChevronLeft } from 'lucide-react'
 const TIPOS_OP = ['ARRIENDO', 'VENTA', 'MONTAJE', 'INTERNO']
 const MODELOS = ['CP2D','CP2S','CP4L','CP4R','CP1D','CP2F','CP2L','DRY20','DRY40','REEFER20','REEFER40','MESP','BP2M','BD2S','PL2S','OTROS']
 
+const SOLICITANTES = [
+  'Brezzy Soto','Juan Orellana','Debora Riquelme','Javiera Robles','Monica Estay',
+  'Carolina Peña','Suleika Vera','Michael Roman','Thania Villalobos','Vanessa Le-Quesne',
+  'Luis Sanchez','Yamila Silva','Luis Diaz',
+]
+
 type Serie = { serie: string; modelo: string; descripcion_trabajo: string }
 type Adicional = { serie_ref: string; descripcion_corta: string; cantidad: number }
 
@@ -35,6 +41,7 @@ export default function FormNuevaOP({ vendedores }: Props) {
     tipo_op: '',
     cliente_nombre: '',
     vendedor: '',
+    solicitante: '',
     modelo: '',
     distribucion: '',
     fecha_inicio: '',
@@ -83,6 +90,7 @@ export default function FormNuevaOP({ vendedores }: Props) {
         tipo_op: datos.tipo_op,
         cliente_nombre: datos.cliente_nombre.trim(),
         vendedor: datos.vendedor || null,
+        solicitante: datos.solicitante || null,
         modelo: datos.modelo || null,
         distribucion: datos.distribucion || null,
         fecha_inicio: datos.fecha_inicio || null,
@@ -150,6 +158,15 @@ export default function FormNuevaOP({ vendedores }: Props) {
                   <SelectContent>{vendedores.map(v => <SelectItem key={v} value={v}>{v}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
+              <div className="space-y-1">
+                <Label>Solicitante</Label>
+                <Select value={datos.solicitante} onValueChange={v => setD('solicitante', v)}>
+                  <SelectTrigger><SelectValue placeholder="¿Quién solicita la OP?" /></SelectTrigger>
+                  <SelectContent>{SOLICITANTES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
+                </Select>
+                <p className="text-xs text-gray-400">Si es distinto a quien ingresa</p>
+              </div>
+
               <div className="col-span-2 space-y-1">
                 <Label>Cliente <span className="text-red-500">*</span></Label>
                 <Input value={datos.cliente_nombre} onChange={e => setD('cliente_nombre', e.target.value)} placeholder="Nombre del cliente" />
@@ -318,6 +335,7 @@ export default function FormNuevaOP({ vendedores }: Props) {
               <div><span className="text-gray-500">NV:</span> <span className="font-semibold">{datos.numero_nv || '—'}</span></div>
               <div><span className="text-gray-500">Tipo:</span> <span className="font-semibold">{datos.tipo_op}</span></div>
               <div><span className="text-gray-500">Vendedor:</span> <span className="font-semibold">{datos.vendedor || '—'}</span></div>
+              {datos.solicitante && <div><span className="text-gray-500">Solicitante:</span> <span className="font-semibold">{datos.solicitante}</span></div>}
               <div className="col-span-2"><span className="text-gray-500">Cliente:</span> <span className="font-semibold">{datos.cliente_nombre}</span></div>
               {datos.direccion_entrega && <div className="col-span-2"><span className="text-gray-500">Dirección:</span> {datos.direccion_entrega}</div>}
               {datos.fecha_entrega && <div><span className="text-gray-500">F. Entrega:</span> {new Date(datos.fecha_entrega + 'T12:00:00').toLocaleDateString('es-CL')}</div>}

@@ -51,6 +51,9 @@ export default async function DetalleOPPage({ params }: { params: Promise<{ id: 
           <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
             <div><span className="text-gray-500">NV:</span> <span className="font-medium">{op.numero_nv ?? '—'}</span></div>
             <div><span className="text-gray-500">Vendedor:</span> <span className="font-medium">{op.vendedor ?? '—'}</span></div>
+            {op.solicitante && (
+              <div><span className="text-gray-500">Solicitante:</span> <span className="font-medium text-blue-700">{op.solicitante}</span></div>
+            )}
             <div><span className="text-gray-500">Modelo:</span> <span className="font-medium">{op.modelo ?? '—'}</span></div>
             <div><span className="text-gray-500">Distribución:</span> <span className="font-medium">{op.distribucion ?? '—'}</span></div>
             {op.fecha_entrega && (

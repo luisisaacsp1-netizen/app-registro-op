@@ -136,6 +136,7 @@ export async function crearOP(data: {
   tipo_op: string
   cliente_nombre: string
   vendedor?: string | null
+  solicitante?: string | null
   modelo?: string | null
   distribucion?: string | null
   fecha_inicio?: string | null
