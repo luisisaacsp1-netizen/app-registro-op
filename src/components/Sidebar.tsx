@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import LogoPatagonia from '@/components/LogoPatagonia'
+import { LOGO_BASE64 } from '@/components/logoBase64'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import {
@@ -62,10 +62,10 @@ export default function Sidebar({ role, userEmail, nombreCompleto }: SidebarProp
       padding: '8px 0', zIndex: 300, flexShrink: 0,
     }}>
 
-      {/* Logo sidebar */}
+      {/* Logo sidebar — base64 embebido */}
       <div style={{ width: 36, height: 36, marginBottom: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo.png" alt="CP" style={{ width: 34, height: 34, objectFit: 'contain' }} />
+        <img src={LOGO_BASE64} alt="CP" style={{ width: 34, height: 34, objectFit: 'contain' }} />
       </div>
 
       {/* Separador */}

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import LogoPatagonia from '@/components/LogoPatagonia'
+import { LOGO_BASE64 } from '@/components/logoBase64'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
@@ -34,9 +34,9 @@ export default function LoginPage() {
       alignItems: 'center', justifyContent: 'center',
       padding: 20,
     }}>
-      {/* Logo real empresa */}
+      {/* Logo embebido base64 — no depende de archivos externos */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/logo.png" alt="Contenedores Patagonia"
+      <img src={LOGO_BASE64} alt="Contenedores Patagonia"
         style={{ height: 70, objectFit: 'contain', marginBottom: 32 }} />
 
       {/* Card */}
