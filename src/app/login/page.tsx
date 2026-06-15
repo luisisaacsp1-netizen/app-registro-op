@@ -34,10 +34,10 @@ export default function LoginPage() {
       alignItems: 'center', justifyContent: 'center',
       padding: 20,
     }}>
-      {/* Logo 100% CSS, sin archivos externos */}
-      <div style={{ marginBottom: 32 }}>
-        <LogoPatagonia variant="full" />
-      </div>
+      {/* Logo real empresa */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/logo.png" alt="Contenedores Patagonia"
+        style={{ height: 70, objectFit: 'contain', marginBottom: 32 }} />
 
       {/* Card */}
       <div style={{

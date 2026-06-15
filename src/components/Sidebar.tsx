@@ -62,9 +62,10 @@ export default function Sidebar({ role, userEmail, nombreCompleto }: SidebarProp
       padding: '8px 0', zIndex: 300, flexShrink: 0,
     }}>
 
-      {/* Logo — solo chevron */}
+      {/* Logo sidebar */}
       <div style={{ width: 36, height: 36, marginBottom: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <LogoPatagonia variant="icon" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo.png" alt="CP" style={{ width: 34, height: 34, objectFit: 'contain' }} />
       </div>
 
       {/* Separador */}
