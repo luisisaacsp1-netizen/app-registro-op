@@ -112,39 +112,39 @@ alter table op_adicionales enable row level security;
 alter table formatos_tecnicos enable row level security;
 
 -- Políticas ordenes_produccion
-create policy if not exists "op_select" on ordenes_produccion
+create policy "op_select" on ordenes_produccion
   for select to authenticated using (true);
-create policy if not exists "op_insert" on ordenes_produccion
+create policy "op_insert" on ordenes_produccion
   for insert to authenticated with check (get_my_role() in ('ot','admin'));
-create policy if not exists "op_update" on ordenes_produccion
+create policy "op_update" on ordenes_produccion
   for update to authenticated using (get_my_role() in ('ot','admin'));
 
 -- Políticas op_series
-create policy if not exists "op_series_select" on op_series
+create policy "op_series_select" on op_series
   for select to authenticated using (true);
-create policy if not exists "op_series_insert" on op_series
+create policy "op_series_insert" on op_series
   for insert to authenticated with check (get_my_role() in ('ot','admin'));
-create policy if not exists "op_series_update" on op_series
+create policy "op_series_update" on op_series
   for update to authenticated using (get_my_role() in ('ot','admin'));
-create policy if not exists "op_series_delete" on op_series
+create policy "op_series_delete" on op_series
   for delete to authenticated using (get_my_role() in ('ot','admin'));
 
 -- Políticas op_adicionales
-create policy if not exists "op_adicionales_select" on op_adicionales
+create policy "op_adicionales_select" on op_adicionales
   for select to authenticated using (true);
-create policy if not exists "op_adicionales_insert" on op_adicionales
+create policy "op_adicionales_insert" on op_adicionales
   for insert to authenticated with check (get_my_role() in ('ot','admin'));
-create policy if not exists "op_adicionales_update" on op_adicionales
+create policy "op_adicionales_update" on op_adicionales
   for update to authenticated using (get_my_role() in ('ot','admin'));
-create policy if not exists "op_adicionales_delete" on op_adicionales
+create policy "op_adicionales_delete" on op_adicionales
   for delete to authenticated using (get_my_role() in ('ot','admin'));
 
 -- Políticas formatos_tecnicos
-create policy if not exists "ft_select" on formatos_tecnicos
+create policy "ft_select" on formatos_tecnicos
   for select to authenticated using (true);
-create policy if not exists "ft_insert" on formatos_tecnicos
+create policy "ft_insert" on formatos_tecnicos
   for insert to authenticated with check (get_my_role() in ('ot','admin'));
-create policy if not exists "ft_update" on formatos_tecnicos
+create policy "ft_update" on formatos_tecnicos
   for update to authenticated using (get_my_role() in ('ot','admin'));
 
 -- Trigger updated_at para nuevas tablas
