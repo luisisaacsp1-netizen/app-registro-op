@@ -92,7 +92,7 @@ export async function rechazarOP(opId: string, observaciones: string) {
 
   const { data: op } = await supabase
     .from('ordenes_produccion')
-    .select('numero_op, cliente_nombre, created_by')
+    .select('numero_op, cliente_nombre, tipo_op, created_by')
     .eq('id', opId)
     .single()
 

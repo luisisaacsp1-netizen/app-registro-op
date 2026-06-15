@@ -7,7 +7,6 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Plus, Trash2 } from 'lucide-react'
 
@@ -52,10 +51,10 @@ export default function FormIngresoDirecto({ vendedores }: Props) {
   // Ítems (filas del programa)
   const [items, setItems] = useState<Item[]>([itemVacio()])
 
-  function setG(k: string, v: string) { setGral(p => ({ ...p, [k]: v })) }
+  function setG(k: string, v: string | null) { setGral(p => ({ ...p, [k]: v ?? '' })) }
 
-  function setItem(i: number, k: keyof Item, v: string) {
-    setItems(p => p.map((it, j) => j === i ? { ...it, [k]: v } : it))
+  function setItem(i: number, k: keyof Item, v: string | null) {
+    setItems(p => p.map((it, j) => j === i ? { ...it, [k]: v ?? '' } : it))
   }
 
   function addItem() { setItems(p => [...p, itemVacio()]) }
@@ -75,7 +74,7 @@ export default function FormIngresoDirecto({ vendedores }: Props) {
     try {
       const filas = items
         .filter(it => it.descripcion.trim() || it.modelo || it.serie.trim())
-        .map((it, i) => ({
+        .map((it) => ({
           op_pv:         gral.op_pv.trim(),
           nv:            gral.nv.trim() || null,
           tipo:          gral.tipo,

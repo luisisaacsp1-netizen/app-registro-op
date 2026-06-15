@@ -55,12 +55,12 @@ export default function FormNuevaOP({ vendedores }: Props) {
   const [series, setSeries] = useState<Serie[]>([{ serie: '', modelo: '', descripcion_trabajo: '' }])
   const [adicionales, setAdicionales] = useState<Adicional[]>([])
 
-  function setD(k: string, v: string) { setDatos(p => ({ ...p, [k]: v })) }
+  function setD(k: string, v: string | null) { setDatos(p => ({ ...p, [k]: v ?? '' })) }
 
   function addSerie() { setSeries(p => [...p, { serie: '', modelo: '', descripcion_trabajo: '' }]) }
   function removeSerie(i: number) { setSeries(p => p.filter((_, j) => j !== i)) }
-  function setSerie(i: number, k: keyof Serie, v: string) {
-    setSeries(p => p.map((s, j) => j === i ? { ...s, [k]: v } : s))
+  function setSerie(i: number, k: keyof Serie, v: string | null) {
+    setSeries(p => p.map((s, j) => j === i ? { ...s, [k]: v ?? '' } : s))
   }
 
   function addAdicional() { setAdicionales(p => [...p, { serie_ref: '', descripcion_corta: '', cantidad: 1 }]) }
