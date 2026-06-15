@@ -73,6 +73,8 @@ export async function aprobarOP(opId: string, checklist: Record<string, boolean>
           vendedorNombre: nombre,
           numeroOp: op.numero_op,
           clienteNombre: op.cliente_nombre,
+          tipoOp: op.tipo_op,
+          fechaEntrega: op.fecha_entrega,
         })
       }
     } catch { /* email no crítico */ }
@@ -117,6 +119,7 @@ export async function rechazarOP(opId: string, observaciones: string) {
           vendedorNombre: nombre,
           numeroOp: op.numero_op,
           clienteNombre: op.cliente_nombre,
+          tipoOp: op.tipo_op ?? '',
           motivo: observaciones,
         })
       }
@@ -180,15 +183,13 @@ export async function crearOP(data: {
     const otEmails = (process.env.NOTIFY_OT_EMAIL ?? '').split(',').map(e => e.trim()).filter(Boolean)
     if (otEmails.length > 0) {
       const nombre = user.user_metadata?.nombre_completo ?? user.email ?? 'Vendedor'
-      for (const otEmail of otEmails) {
-        await emailNuevaOP({
-          numeroOp: op.numero_op,
-          clienteNombre: op.cliente_nombre,
-          tipoOp: op.tipo_op,
-          vendedorNombre: nombre,
-          otEmail,
-        })
-      }
+      await emailNuevaOP({
+        numeroOp: op.numero_op,
+        clienteNombre: op.cliente_nombre,
+        tipoOp: op.tipo_op,
+        vendedorNombre: nombre,
+        otEmails,
+      })
     }
   } catch { /* email no crítico */ }
 
