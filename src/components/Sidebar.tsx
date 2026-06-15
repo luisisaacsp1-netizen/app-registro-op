@@ -25,7 +25,8 @@ interface SidebarProps {
 const navItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard, roles: ['ot', 'terreno', 'admin', 'ventas'] },
   { href: '/ops', label: 'Órdenes de Producción', icon: FileCheck2, roles: ['ot', 'terreno', 'admin', 'ventas'] },
-  { href: '/ops/nueva', label: 'Ingresar OP', icon: ClipboardList, roles: ['ot', 'admin', 'ventas'] },
+  { href: '/ingreso', label: 'Ingreso directo OP', icon: ClipboardList, roles: ['ot', 'admin'] },
+  { href: '/ops/nueva', label: 'Ingresar OP', icon: ClipboardList, roles: ['ventas'] },
   { href: '/programa', label: 'Programa', icon: Table2, roles: ['ot', 'terreno', 'admin'] },
   { href: '/of', label: 'Órdenes de Fabricación', icon: Wrench, roles: ['ot', 'admin'] },
   { href: '/admin', label: 'Usuarios', icon: ShieldCheck, roles: ['admin'] },
