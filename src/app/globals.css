@@ -1,73 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@300;400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+  .text-balance { text-wrap: balance; }
 }
 
 @layer base {
   :root {
-    /* Contenedores Patagonia — dark corporate theme */
-    --navy:   #1a2744;
-    --navy2:  #243056;
-    --navy3:  #1e2d4a;
-    --blue:   #1a6abf;
-    --blue2:  #1558a0;
-    --red:    #e63329;
-    --bg:     #0f1623;
-    --bg2:    #1a2235;
-    --bg3:    #232e45;
-    --border: #2a3552;
-    --txt:    #e2e8f0;
-    --muted:  #64748b;
+    /* ── Contenedores Patagonia — colores corporativos ── */
+    --navy:    #0d1b2e;
+    --navy2:   #132338;
+    --navy3:   #1a3050;
+    --red:     #e63329;
+    --off:     #f4f6f9;
+    --border:  #d4dae6;
+    --text:    #1a2535;
+    --muted:   #637388;
+    --inp:     #f8f9fc;
+    --green:   #1a7a4a;
+    --greenl:  #d4edda;
+    --amber:   #c97a00;
+    --amberl:  #fff3cd;
+    --redl:    #f8d7da;
+    --s1:      0 2px 12px rgba(13,27,46,.10);
+    --s2:      0 4px 24px rgba(13,27,46,.15);
+    --r:       8px;
 
-    /* shadcn vars */
-    --background:        var(--bg);
-    --foreground:        var(--txt);
-    --card:              var(--bg2);
-    --card-foreground:   var(--txt);
-    --popover:           var(--bg2);
-    --popover-foreground: var(--txt);
-    --primary:           var(--blue);
+    /* shadcn tokens mapeados al tema */
+    --background:         #f4f6f9;
+    --foreground:         #1a2535;
+    --card:               #ffffff;
+    --card-foreground:    #1a2535;
+    --popover:            #ffffff;
+    --popover-foreground: #1a2535;
+    --primary:            #0d1b2e;
     --primary-foreground: #ffffff;
-    --secondary:         var(--bg3);
-    --secondary-foreground: var(--txt);
-    --muted:             var(--bg3);
-    --muted-foreground:  #64748b;
-    --accent:            var(--bg3);
-    --accent-foreground: var(--txt);
-    --destructive:       #dc2626;
-    --border:            #2a3552;
-    --input:             #2a3552;
-    --ring:              var(--blue);
-    --radius:            0.5rem;
-    --sidebar:           var(--navy);
-    --sidebar-foreground: var(--txt);
-    --sidebar-primary:   var(--blue);
-    --sidebar-primary-foreground: #ffffff;
-    --sidebar-accent:    var(--navy2);
-    --sidebar-accent-foreground: var(--txt);
-    --sidebar-border:    #2a3552;
-    --sidebar-ring:      var(--blue);
+    --secondary:          #f4f6f9;
+    --secondary-foreground: #1a2535;
+    --muted:              #f4f6f9;
+    --muted-foreground:   #637388;
+    --accent:             #f4f6f9;
+    --accent-foreground:  #1a2535;
+    --destructive:        #e63329;
+    --border:             #d4dae6;
+    --input:              #f8f9fc;
+    --ring:               #0d1b2e;
+    --radius:             0.5rem;
   }
 
-  * {
-    @apply border-border;
-  }
+  * { @apply border-border; }
 
   body {
-    background: var(--bg);
-    color: var(--txt);
-    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--off);
+    color: var(--text);
+    font-family: "Open Sans", system-ui, sans-serif;
     font-size: 13px;
   }
 
-  /* Scrollbar dark */
+  /* Scrollbar sutil */
   ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-track { background: var(--off); }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #3a4a6a; }
+  ::-webkit-scrollbar-thumb:hover { background: #b0bac8; }
 }

@@ -7,6 +7,18 @@ import AppShell from '@/components/AppShell'
 
 export const dynamic = 'force-dynamic'
 
+// Estilos inline reutilizables (mismo patrón que app de referencia)
+const card: React.CSSProperties = {
+  background: '#fff', borderRadius: 8, border: '1px solid #d4dae6',
+  padding: '13px 15px', boxShadow: '0 2px 12px rgba(13,27,46,.10)',
+}
+const cardTitle: React.CSSProperties = {
+  fontFamily: 'Montserrat, sans-serif', fontSize: 9, fontWeight: 700,
+  color: '#637388', letterSpacing: '1.2px', textTransform: 'uppercase',
+  paddingBottom: 11, borderBottom: '1px solid #d4dae6', marginBottom: 13,
+  display: 'flex', alignItems: 'center', gap: 6,
+}
+
 export default async function DashboardPage() {
   const supabase = await createClient()
   const hoy = format(new Date(), 'yyyy-MM-dd')
@@ -27,74 +39,73 @@ export default async function DashboardPage() {
   ])
 
   const stats = [
-    { label: 'OPs por revisar',  value: opsPendientes?.length ?? 0,    icon: FileCheck2,   color: '#f59e0b', href: '/ops' },
-    { label: 'Pendientes prod.', value: programaPendientes?.length ?? 0, icon: ClipboardList, color: '#f97316', href: '/programa' },
-    { label: 'En proceso',       value: programaEnProceso?.length ?? 0,  icon: Wrench,        color: '#60a5fa', href: '/programa' },
-    { label: 'Despachos hoy',    value: despachosHoy?.length ?? 0,       icon: Truck,         color: '#4ade80', href: '/programa' },
+    { label: 'OPs por revisar',  value: opsPendientes?.length ?? 0,     color: '#c97a00', bg: '#fff3cd', href: '/ops' },
+    { label: 'Pendientes prod.', value: programaPendientes?.length ?? 0, color: '#c97a00', bg: '#fff3cd', href: '/programa' },
+    { label: 'En proceso',       value: programaEnProceso?.length ?? 0,  color: '#0d1b2e', bg: '#e8edf5', href: '/programa' },
+    { label: 'Despachos hoy',    value: despachosHoy?.length ?? 0,       color: '#1a7a4a', bg: '#d4edda', href: '/programa' },
   ]
 
   return (
     <AppShell>
-      <div className="p-6 space-y-5">
+      <div style={{ maxWidth: 900, margin: '0 auto', padding: '16px 20px 50px' }}>
 
-        {/* Header */}
-        <div>
-          <h1 className="text-xl font-bold" style={{ color: '#e2e8f0' }}>Dashboard</h1>
-          <p className="text-xs mt-0.5" style={{ color: '#64748b' }}>
+        {/* Page header */}
+        <div style={{ marginBottom: 14 }}>
+          <div style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 14, fontWeight: 700, color: '#0d1b2e', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ width: 4, height: 16, background: '#e63329', borderRadius: 2, flexShrink: 0, display: 'inline-block' }} />
+            Dashboard
+          </div>
+          <p style={{ fontSize: 11, color: '#637388', marginTop: 3, paddingLeft: 12 }}>
             {format(new Date(), "EEEE d 'de' MMMM yyyy", { locale: es })}
           </p>
         </div>
 
-        {/* Stat cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {stats.map(stat => {
-            const Icon = stat.icon
-            return (
-              <Link key={stat.label} href={stat.href}>
-                <div
-                  className="rounded-lg p-4 flex items-center gap-3 cursor-pointer transition-all hover:scale-[1.02]"
-                  style={{ background: '#1a2235', border: '1px solid #2a3552' }}
-                >
-                  <div className="flex items-center justify-center rounded-lg flex-shrink-0"
-                    style={{ width: 38, height: 38, background: `${stat.color}18` }}>
-                    <Icon size={19} style={{ color: stat.color }} />
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold" style={{ color: '#e2e8f0' }}>{stat.value}</div>
-                    <div className="text-xs" style={{ color: '#64748b' }}>{stat.label}</div>
-                  </div>
+        {/* KPI cards */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 10, marginBottom: 12 }}>
+          {stats.map(stat => (
+            <Link key={stat.label} href={stat.href} style={{ textDecoration: 'none' }}>
+              <div style={{ ...card, cursor: 'pointer', transition: 'all .2s' }}
+                className="kpi-hover">
+                <div style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 22, fontWeight: 700, color: '#0d1b2e', lineHeight: 1 }}>
+                  {stat.value}
                 </div>
-              </Link>
-            )
-          })}
+                <div style={{ fontSize: 10, color: '#637388', marginTop: 4 }}>{stat.label}</div>
+              </div>
+            </Link>
+          ))}
         </div>
 
         {/* OPs pendientes de revisión */}
         {(opsPendientes?.length ?? 0) > 0 && (
-          <div className="rounded-lg overflow-hidden" style={{ background: '#1a2235', border: '1px solid #2a3552' }}>
-            <div className="flex items-center gap-2 px-4 py-3 border-b" style={{ borderColor: '#2a3552' }}>
-              <AlertCircle size={15} style={{ color: '#f59e0b' }} />
-              <span className="text-sm font-semibold" style={{ color: '#fbbf24' }}>OPs pendientes de revisión</span>
+          <div style={{ ...card, marginBottom: 12, padding: 0, overflow: 'hidden' }}>
+            <div style={{ ...cardTitle, margin: 0, padding: '10px 16px', borderBottom: '1px solid #d4dae6' }}>
+              <span style={{ width: 5, height: 5, background: '#e63329', borderRadius: '50%', flexShrink: 0, display: 'inline-block' }} />
+              <AlertCircle size={12} style={{ color: '#c97a00' }} />
+              OPs pendientes de revisión
             </div>
-            <div className="divide-y" style={{ borderColor: '#2a3552' }}>
-              {opsPendientes!.map(op => (
+            <div>
+              {opsPendientes!.map((op, idx) => (
                 <Link key={op.id} href={`/ops/${op.id}`}
-                  className="flex items-center justify-between px-4 py-3 transition-colors"
-                  style={{ color: '#e2e8f0' }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#243056' }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent' }}
+                  style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    padding: '9px 16px',
+                    borderBottom: idx < opsPendientes!.length - 1 ? '1px solid #d4dae6' : 'none',
+                    background: '#fff', transition: 'background .12s', textDecoration: 'none',
+                    color: '#1a2535',
+                  }}
+                  className="row-hover"
                 >
-                  <div>
-                    <span className="font-semibold text-sm">OP {op.numero_op}</span>
-                    <span className="text-xs ml-3" style={{ color: '#94a3b8' }}>{op.cliente_nombre}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <span style={{
+                      fontFamily: 'Montserrat, sans-serif', fontSize: 9, fontWeight: 700,
+                      background: '#0d1b2e', color: '#fff', padding: '2px 6px', borderRadius: 3,
+                    }}>OP {op.numero_op}</span>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: '#1a2535' }}>{op.cliente_nombre}</span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs px-2 py-0.5 rounded font-medium"
-                      style={{ background: '#232e45', color: '#94a3b8' }}>{op.tipo_op}</span>
-                    <span className="text-xs" style={{ color: '#64748b' }}>
-                      {new Date(op.created_at).toLocaleDateString('es-CL')}
-                    </span>
-                    <span className="text-xs font-medium" style={{ color: '#60a5fa' }}>Revisar →</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span style={{ fontFamily: 'Montserrat, sans-serif', fontSize: 9, fontWeight: 700, background: '#fff3cd', color: '#856404', padding: '2px 6px', borderRadius: 4 }}>{op.tipo_op}</span>
+                    <span style={{ fontSize: 10, color: '#637388' }}>{new Date(op.created_at).toLocaleDateString('es-CL')}</span>
+                    <span style={{ fontSize: 10, color: '#e63329', fontWeight: 700 }}>Revisar →</span>
                   </div>
                 </Link>
               ))}
@@ -103,35 +114,37 @@ export default async function DashboardPage() {
         )}
 
         {/* Despachos hoy */}
-        <div className="rounded-lg overflow-hidden" style={{ background: '#1a2235', border: '1px solid #2a3552' }}>
-          <div className="px-4 py-3 border-b" style={{ borderColor: '#2a3552' }}>
-            <span className="text-sm font-semibold" style={{ color: '#e2e8f0' }}>
-              Despachos / Entregas hoy — {format(new Date(), 'dd-MM-yyyy')}
-            </span>
+        <div style={{ ...card, padding: 0, overflow: 'hidden' }}>
+          <div style={{ ...cardTitle, margin: 0, padding: '10px 16px', borderBottom: '1px solid #d4dae6' }}>
+            <span style={{ width: 5, height: 5, background: '#e63329', borderRadius: '50%', flexShrink: 0, display: 'inline-block' }} />
+            Despachos / Entregas hoy — {format(new Date(), 'dd-MM-yyyy')}
           </div>
-          <div className="p-4">
+          <div style={{ padding: '12px 16px' }}>
             {!despachosHoy?.length ? (
-              <p className="text-sm" style={{ color: '#64748b' }}>No hay despachos programados para hoy.</p>
+              <p style={{ fontSize: 12, color: '#637388' }}>No hay despachos programados para hoy.</p>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-xs">
+              <div style={{ overflowX: 'auto', borderRadius: 8, border: '1px solid #d4dae6' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11 }}>
                   <thead>
-                    <tr style={{ borderBottom: '1px solid #2a3552' }}>
+                    <tr>
                       {['OP', 'Cliente', 'Modelo / Serie', 'Descripción', 'Ejecuta'].map(h => (
-                        <th key={h} className="text-left pb-2 pr-4 font-semibold uppercase tracking-wide"
-                          style={{ color: '#64748b', fontSize: 10 }}>{h}</th>
+                        <th key={h} style={{
+                          background: '#0d1b2e', color: '#fff', padding: '7px 9px',
+                          textAlign: 'left', fontFamily: 'Montserrat, sans-serif',
+                          fontSize: 9, fontWeight: 700, letterSpacing: '.8px', textTransform: 'uppercase',
+                        }}>{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
-                    {despachosHoy.map(row => (
-                      <tr key={row.id} style={{ borderBottom: '1px solid #1e2d4a' }}
-                        className="transition-colors hover:bg-[#232e45]">
-                        <td className="py-2 pr-4 font-mono font-bold text-xs" style={{ color: '#60a5fa' }}>{row.op_pv}</td>
-                        <td className="py-2 pr-4" style={{ color: '#e2e8f0' }}>{row.cliente}</td>
-                        <td className="py-2 pr-4" style={{ color: '#94a3b8' }}>{row.modelo} {row.serie && `· ${row.serie}`}</td>
-                        <td className="py-2 pr-4 max-w-xs truncate" style={{ color: '#94a3b8' }}>{row.descripcion}</td>
-                        <td className="py-2" style={{ color: '#94a3b8' }}>{row.ejecuta ?? '—'}</td>
+                    {despachosHoy.map((row, i) => (
+                      <tr key={row.id} style={{ background: i % 2 === 1 ? '#f8f9fc' : '#fff' }}
+                        className="row-hover">
+                        <td style={{ padding: '7px 9px', borderBottom: '1px solid #d4dae6', fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: 11, color: '#0d1b2e' }}>{row.op_pv}</td>
+                        <td style={{ padding: '7px 9px', borderBottom: '1px solid #d4dae6' }}>{row.cliente}</td>
+                        <td style={{ padding: '7px 9px', borderBottom: '1px solid #d4dae6', color: '#637388' }}>{row.modelo}{row.serie && ` · ${row.serie}`}</td>
+                        <td style={{ padding: '7px 9px', borderBottom: '1px solid #d4dae6', color: '#637388', maxWidth: 240 }} className="truncate">{row.descripcion}</td>
+                        <td style={{ padding: '7px 9px', borderBottom: '1px solid #d4dae6', color: '#637388' }}>{row.ejecuta ?? '—'}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -142,20 +155,39 @@ export default async function DashboardPage() {
         </div>
 
         {/* Quick actions */}
-        <div className="flex gap-3">
-          <Link href="/ops/nueva"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold transition-colors"
-            style={{ background: '#1558a0', color: '#fff' }}>
-            <ClipboardList size={15} /> Ingresar OP
+        <div style={{ display: 'flex', gap: 10, marginTop: 14 }}>
+          <Link href="/ops/nueva" style={{ textDecoration: 'none' }}>
+            <button style={{
+              display: 'flex', alignItems: 'center', gap: 7,
+              padding: '10px 16px', background: '#0d1b2e', color: '#fff',
+              border: 'none', borderRadius: 6,
+              fontFamily: 'Montserrat, sans-serif', fontSize: 10, fontWeight: 700,
+              letterSpacing: '1px', textTransform: 'uppercase', cursor: 'pointer',
+            }}>
+              <span style={{ width: 3, height: 10, background: '#e63329', borderRadius: 2 }} />
+              <ClipboardList size={13} />
+              Ingresar OP
+            </button>
           </Link>
-          <Link href="/programa"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors"
-            style={{ background: '#232e45', color: '#94a3b8', border: '1px solid #2a3552' }}>
-            Ver Programa
+          <Link href="/programa" style={{ textDecoration: 'none' }}>
+            <button style={{
+              display: 'flex', alignItems: 'center', gap: 7,
+              padding: '10px 16px', background: 'transparent', color: '#0d1b2e',
+              border: '1.5px solid #d4dae6', borderRadius: 6,
+              fontFamily: 'Montserrat, sans-serif', fontSize: 10, fontWeight: 700,
+              letterSpacing: '1px', textTransform: 'uppercase', cursor: 'pointer',
+            }}>
+              Ver Programa
+            </button>
           </Link>
         </div>
 
       </div>
+
+      <style>{`
+        .kpi-hover:hover { border-color: #0d1b2e !important; box-shadow: 0 4px 24px rgba(13,27,46,.15) !important; transform: translateY(-2px); }
+        .row-hover:hover td, .row-hover:hover { background: #edf1f8 !important; }
+      `}</style>
     </AppShell>
   )
 }
