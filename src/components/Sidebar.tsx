@@ -12,6 +12,8 @@ import {
   LogOut,
   ChevronRight,
   FileCheck2,
+  UserCircle,
+  ShieldCheck,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -21,11 +23,13 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard, roles: ['ot', 'terreno', 'admin'] },
-  { href: '/ops', label: 'Órdenes de Producción', icon: FileCheck2, roles: ['ot', 'terreno', 'admin'] },
-  { href: '/ops/nueva', label: 'Ingresar OP', icon: ClipboardList, roles: ['ot', 'admin'] },
+  { href: '/', label: 'Dashboard', icon: LayoutDashboard, roles: ['ot', 'terreno', 'admin', 'ventas'] },
+  { href: '/ops', label: 'Órdenes de Producción', icon: FileCheck2, roles: ['ot', 'terreno', 'admin', 'ventas'] },
+  { href: '/ops/nueva', label: 'Ingresar OP', icon: ClipboardList, roles: ['ot', 'admin', 'ventas'] },
   { href: '/programa', label: 'Programa', icon: Table2, roles: ['ot', 'terreno', 'admin'] },
   { href: '/of', label: 'Órdenes de Fabricación', icon: Wrench, roles: ['ot', 'admin'] },
+  { href: '/admin', label: 'Usuarios', icon: ShieldCheck, roles: ['admin'] },
+  { href: '/perfil', label: 'Mi perfil', icon: UserCircle, roles: ['ot', 'terreno', 'admin', 'ventas'] },
 ]
 
 export default function Sidebar({ role, userEmail }: SidebarProps) {
