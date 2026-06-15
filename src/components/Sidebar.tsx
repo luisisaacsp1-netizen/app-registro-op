@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import LogoPatagonia from '@/components/LogoPatagonia'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import {
@@ -62,9 +61,11 @@ export default function Sidebar({ role, userEmail, nombreCompleto }: SidebarProp
       padding: '8px 0', zIndex: 300, flexShrink: 0,
     }}>
 
-      {/* Logo */}
+      {/* Logo — solo chevron rojo */}
       <div style={{ width: 36, height: 36, marginBottom: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <LogoPatagonia variant="icon" height={34} />
+        <svg viewBox="0 0 54 76" width={28} height={28}>
+          <path d="M2 10 L34 38 L2 66 L12 66 L44 38 L12 10 Z" fill="#e63329"/>
+        </svg>
       </div>
 
       {/* Separador */}

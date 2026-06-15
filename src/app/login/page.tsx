@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import LogoPatagonia from '@/components/LogoPatagonia'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
@@ -34,10 +33,10 @@ export default function LoginPage() {
       alignItems: 'center', justifyContent: 'center',
       padding: 20,
     }}>
-      {/* Logo */}
-      <div style={{ marginBottom: 32 }}>
-        <LogoPatagonia height={57} />
-      </div>
+      {/* Logo — img puro, funciona con SVG sin restricciones de Next.js */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/logo.svg" alt="Contenedores Patagonia"
+        style={{ height: 58, objectFit: 'contain', marginBottom: 32 }} />
 
       {/* Card */}
       <div style={{
